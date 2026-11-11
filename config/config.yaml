@@ -1,0 +1,77 @@
+# ==============================================================================
+# SpecRoute: Hybrid Local-Cloud Speculative Decoding Configuration
+# ==============================================================================
+
+models:
+  # Draft Model (Runs locally on client laptop/workstation)
+  # Ultra-light model for fast autoregressive generation of N draft tokens
+  draft_model_id: "Qwen/Qwen2.5-0.5B-Instruct"  # Alternatives: "Qwen/Qwen2.5-1.5B-Instruct", "meta-llama/Llama-3.2-1B-Instruct"
+  
+  # Target Model (Runs remotely on Colab/Kaggle/Cloud GPU)
+  # High-capacity model performing single-pass parallel verification of draft tokens
+  target_model_id: "Qwen/Qwen2.5-7B-Instruct"    # Alternatives: "Qwen/Qwen2.5-14B-Instruct", "meta-llama/Meta-Llama-3.1-8B-Instruct"
+
+  # Shared Tokenizer Configuration
+  # Strict synchronization: Local Draft and Remote Target MUST share identical vocabulary & token IDs
+  tokenizer_id: "Qwen/Qwen2.5-0.5B-Instruct"
+
+  # Local Draft Engine Backend: "simulation", "huggingface", "llama_cpp", or "ollama"
+  # Default is "simulation" for instant testing, switch to "huggingface" for full weights
+  local_engine_backend: "simulation"
+
+  # Device for local engine ("cpu", "cuda", "mps", "auto")
+  local_device: "cpu"
+
+speculative:
+  # Lookahead window size: Number of tokens the draft model guesses per iteration (K)
+  lookahead_k: 4
+
+  # Sampling mode: 0.0 for Greedy verification; >0.0 for Stochastic Speculative Sampling
+  temperature: 0.0
+  top_p: 0.95
+
+  # Max generated tokens per request
+  max_new_tokens: 512
+
+  # Smoothing: Emit verified tokens with micro-intervals to provide seamless typewriter UI
+  # and mask background verification network latency
+  smooth_streaming: true
+  token_pacing_ms: 12
+
+remote_server:
+  # URL to remote server (Colab / Kaggle via ngrok, Localtunnel, or local testing port)
+  # Example: "https://your-ngrok-subdomain.ngrok-free.app" or "http://127.0.0.1:8001"
+  base_url: "http://127.0.0.1:8001"
+
+  # Use persistent WebSocket for lowest latency (falls back to HTTP POST if false or disconnected)
+  use_websocket: true
+
+  # WebSocket endpoint path
+  ws_path: "/v1/speculative/ws"
+
+  # HTTP verification endpoint path
+  http_verify_path: "/v1/speculative/verify"
+
+  # Connection timeout in seconds
+  timeout_seconds: 15.0
+
+  # API token for authenticating to remote target server (optional)
+  auth_token: "specroute-cloud-secret"
+
+local_proxy:
+  # Host and port for local OpenAI-compatible API reverse proxy (accessed by LibreChat)
+  host: "0.0.0.0"
+  port: 8000
+
+  # Model alias exposed to LibreChat and OpenAI SDK clients
+  model_name: "specroute-hybrid-qwen"
+
+  # API key required by LibreChat custom endpoint configuration
+  api_key: "specroute-local-token"
+
+monitoring:
+  # Track detailed token acceptance rate in terminal logs
+  track_acceptance_rate: true
+  log_level: "INFO"
+  print_token_text: true
+

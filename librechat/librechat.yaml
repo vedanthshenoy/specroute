@@ -1,0 +1,42 @@
+# ==============================================================================
+# LibreChat Custom Endpoint Configuration for SpecRoute Hybrid Decoding
+# ==============================================================================
+# Place this file in your LibreChat root directory or mount it in docker-compose.
+# Documentation: https://www.librechat.ai/docs/configuration/librechat_yaml/ai_endpoints/custom
+
+version: 1.1.5
+
+cache: true
+
+endpoints:
+  custom:
+    - name: "SpecRoute Hybrid (Local 1.5B + Cloud 7B)"
+      # Any dummy or matching API key to satisfy client header validation
+      apiKey: "specroute-local-token"
+      
+      # URL to local SpecRoute reverse proxy orchestrator
+      # If LibreChat is running in Docker on the same machine, use: http://host.docker.internal:8000/v1
+      # If LibreChat is running natively on host (npm run backend), use: http://127.0.0.1:8000/v1
+      baseURL: "http://host.docker.internal:8000/v1"
+      
+      models:
+        default: ["specroute-hybrid-qwen"]
+        fetch: false
+      
+      titleConvo: true
+      titleModel: "specroute-hybrid-qwen"
+      summarize: false
+      summaryModel: "specroute-hybrid-qwen"
+      forcePrompt: false
+      modelDisplayLabel: "SpecRoute (Hybrid Local-Cloud 1.5B / 7B)"
+
+    - name: "SpecRoute Local (Native Host)"
+      apiKey: "specroute-local-token"
+      baseURL: "http://127.0.0.1:8000/v1"
+      models:
+        default: ["specroute-hybrid-qwen"]
+        fetch: false
+      titleConvo: true
+      titleModel: "specroute-hybrid-qwen"
+      modelDisplayLabel: "SpecRoute Native (127.0.0.1:8000)"
+

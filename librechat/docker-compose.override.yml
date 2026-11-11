@@ -1,0 +1,16 @@
+# ==============================================================================
+# Docker Compose Override for LibreChat + SpecRoute Integration
+# ==============================================================================
+# Place this file in your LibreChat repository alongside docker-compose.yml.
+# It mounts librechat.yaml and allows the container to communicate with
+# the SpecRoute proxy running on host port 8000.
+
+version: '3.4'
+
+services:
+  api:
+    volumes:
+      - ./librechat.yaml:/app/librechat.yaml
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+

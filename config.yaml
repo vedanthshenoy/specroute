@@ -1,0 +1,41 @@
+# SpecRoute - Hybrid Speculative Decoding Configuration
+
+# Draft model (runs locally)
+draft_model:
+  name: "Qwen/Qwen2.5-0.5B-Instruct"
+  engine: "transformers"  # transformers | llamacpp | ollama
+  device: "cpu"           # cpu | cuda | mps
+  max_new_tokens: 2048
+
+# Target model (runs on remote server)
+target_model:
+  name: "Qwen/Qwen2.5-7B-Instruct"
+
+# Shared tokenizer (MUST match between draft and target)
+tokenizer: "Qwen/Qwen2.5-7B-Instruct"
+
+# Speculative decoding parameters
+speculation:
+  lookahead: 5            # Number of draft tokens to speculate per round
+  temperature: 0.7
+  top_p: 0.9
+  max_rounds: 512         # Max speculation rounds per generation
+
+# Remote server connection
+remote:
+  url: "http://localhost:8001"  # Use ngrok URL for Colab, localhost for mock
+  websocket: true               # Use WebSocket for persistent connection
+  timeout_ms: 10000
+  retry_attempts: 3
+
+# Local API server (OpenAI-compatible, for LibreChat)
+api_server:
+  host: "0.0.0.0"
+  port: 8000
+  model_name: "specroute-hybrid"
+
+# Logging
+logging:
+  level: "INFO"
+  show_acceptance_rate: true
+  show_token_details: false

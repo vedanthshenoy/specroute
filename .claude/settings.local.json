@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd:*)",
+      "Bash(sleep:*)",
+      "Bash(curl:*)",
+      "Bash(C:/Users/buzzv/PycharmProjects/db-sql-pract/venv/Scripts/python.exe -c \"import torch; import transformers; print\\('torch', torch.__version__\\); print\\('transformers', transformers.__version__\\)\" 2>&1)",
+      "Bash(taskkill:*)",
+      "Bash(netstat:*)"
+    ]
+  }
+}

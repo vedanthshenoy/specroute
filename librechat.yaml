@@ -1,0 +1,22 @@
+# LibreChat configuration for SpecRoute integration
+# Place this file in your LibreChat root directory or merge into existing librechat.yaml
+
+version: 1.2.1
+cache: true
+
+endpoints:
+  custom:
+    - name: "SpecRoute"
+      apiKey: "sk-specroute"  # Dummy key, not validated
+      baseURL: "http://localhost:8000/v1"
+      models:
+        default: ["specroute-hybrid"]
+        fetch: true
+      titleConvo: true
+      titleModel: "specroute-hybrid"
+      summarize: false
+      dropParams:
+        - "user"
+        - "frequency_penalty"
+        - "presence_penalty"
+      modelDisplayLabel: "SpecRoute Hybrid"
